@@ -1,12 +1,18 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 
 import org.apache.commons.codec.EncoderException;
 
+import vectors.AllTerms;
+import vectors.QueryVector;
 import entity.Document;
+import entity.Term;
 import helper.bingHelper;
 import constant.constant;
 public class bingRun {
@@ -25,7 +31,7 @@ public class bingRun {
 			          Document d=results.get(i); 
 			          d.showDocumentContent();
 			          
-			          d.calculateTermFrequency();
+			          d.calculateTermFrequencyAndPutTermInSet();
 			          
 			       
 			       Scanner in = new Scanner(System.in);
@@ -55,6 +61,32 @@ public class bingRun {
 					 System.out.println("----------------stop---------------");
 					 break;
 				 }
+				 
+				 //test: query vector:
+				 Set<String> queryTerms=new HashSet<String>();
+				 queryTerms.add("gates");
+				 QueryVector.queryVectorinitialize(queryTerms);
+				 System.out.println("number of terms:"+AllTerms.allTerms.size() );
+				 
+				 
+				 ArrayList<Term> documentFrequency=AllTerms.getDocumentFrequency(results);
+				 
+				 for(int i=0; i<documentFrequency.size(); i++){
+					 System.out.println("----------------------------------");
+					 Term qt=QueryVector.queryVector.get(i);
+					 Term dt=documentFrequency.get(i);
+					 System.out.println("queryvectors:"+ "Term: "+ qt.term
+							             +" weight: "+qt.weight);
+					 System.out.println("documetnFrequency:"+"Term: "+ dt.term
+				             +" weight: "+dt.weight);
+				 }
+				 
+				 
+				 
+				 
+				 
+				 
+				 
 				 
 				 // tmp break
 				 break;
