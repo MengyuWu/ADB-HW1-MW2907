@@ -2,6 +2,8 @@ package main;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
@@ -18,11 +20,24 @@ import constant.constant;
 public class bingRun {
 	
 	public static List<Document> results;
-
+   public static Set<String> queryTerms;
+	public static Comparator<Term> termcompartor=new Comparator<Term>(){
+		@Override
+		public int compare(Term a, Term b){
+			if(a.weight>b.weight){
+				return -1;
+			}else if(a.weight<b.weight){
+				return 1;
+			}else{
+				return 0;
+			}
+		}
+	};
+	
+	
 	public static void main(String[] args) {
 		
 		while(true){
-			
 			try {
 				results = bingHelper.bingSearch();
 				 for(int i=0; i<results.size(); i++){
@@ -32,7 +47,6 @@ public class bingRun {
 			           
 			          Document d=results.get(i); 
 			          d.showDocumentContent();
-			          
 			          d.calculateTermFrequencyAndPutTermInSet();
 			          
 			       
@@ -55,6 +69,7 @@ public class bingRun {
 				 }
 				 
 				 //Summary, after getting all the user response for 10 documents
+				 System.out.println("----------------summary----------------");
 				 double currentPrecision=getCurrentPrecision(results);
 				 System.out.println("current iteration using terms:"+ bingHelper.queryTermsStr);
 				 System.out.println("current precision:"+currentPrecision);
@@ -65,12 +80,12 @@ public class bingRun {
 				 }
 				 
 				 //test: query vector:
-				 Set<String> queryTerms=new HashSet<String>();
+				 queryTerms=new HashSet<String>();
 				 queryTerms.add("gates");
 				 QueryVector.queryVectorinitialize(queryTerms);
 				 System.out.println("number of terms:"+AllTerms.allTerms.size() );
 				 
-				 
+				 // calculate the document frequency for each term
 				 getDocumentFrequencies();
 				 
 				 
@@ -95,15 +110,25 @@ public class bingRun {
 //				 
 				
 				ArrayList<Term> nextQueryVector=getNextQueryVector();
-				System.out.println("--------------next query vector----------------");
-				for(Term t:nextQueryVector){
-					System.out.println("term: "+t.term+" weight: "+t.weight);
-				}
+				
+				List<Term> newWords=createNewQueryTerms(nextQueryVector,queryTerms);
+				List<Term> curretWords=getCurretQueryTerms(nextQueryVector,queryTerms);
+				
+				List<Term> nextQueryTerms=new ArrayList<Term>();
+				nextQueryTerms.addAll(curretWords);
+				nextQueryTerms.addAll(newWords);
+				
+				sortQueryTerms(nextQueryTerms);
+				bingHelper.queryTermsStr=createQueryString(nextQueryTerms);
+				System.out.println("next query terms:"+bingHelper.queryTermsStr);
 				
 				
+				
+				//At the end of each iteration, should clear previous dataset
+				cleanHistory();
 				
 				 // tmp break
-				 break;
+				// break;
 				 
 			} catch (EncoderException e) {
 				// TODO Auto-generated catch block
@@ -116,6 +141,70 @@ public class bingRun {
        
 	}
 	
+	public static void cleanHistory(){
+		// the data set are chaning, need to recalculate vectors
+		AllTerms.allTerms.clear();
+		Document.documentFrequency.clear();
+		results.clear();
+		QueryVector.termArr.clear();
+		QueryVector.queryVector.clear();
+	}
+	
+	public static List<Term> createNewQueryTerms(ArrayList<Term> nextQueryVector, Set<String> queryTerms){
+		ArrayList<Term> newWords=new ArrayList<Term>();
+		
+		Collections.sort(nextQueryVector,termcompartor );
+		
+		int max=2;
+		
+		System.out.println("--------------next query vector----------------");
+//		for(Term t:nextQueryVector){
+//			System.out.println("term: "+t.term+" weight: "+t.weight);
+//		}
+
+		
+		for(Term t:nextQueryVector){
+			if(max==0){
+				break;
+			}
+			
+			if(!queryTerms.contains(t.term)){
+				System.out.println("new word:"+t.term+" weight:"+t.weight);
+				newWords.add(t);
+				max--;
+			}
+		
+		}
+		
+		return newWords;
+	}
+	
+	public static List<Term> getCurretQueryTerms( ArrayList<Term> nextQueryVector, Set<String> queryTerms ){
+		List<Term> currentQueryTerms=new ArrayList<Term>();
+		for(String str:queryTerms){
+			for(Term t:nextQueryVector){
+				if(t.term.equals(str)){
+					currentQueryTerms.add(t);
+					continue;
+				}
+			}
+		}
+		
+		return currentQueryTerms;
+	}
+	
+	public static void sortQueryTerms(List<Term> queryTerms){
+		Collections.sort(queryTerms, termcompartor);
+	}
+	
+	public static String createQueryString(List<Term> sortedQueryTerms){
+		String querystring="";
+		for(Term t:sortedQueryTerms){
+			querystring+=t.term+" ";
+		}
+		
+		return querystring;
+	}
 	
 	public static ArrayList<Term> getNextQueryVector(){
 		ArrayList<Term> nextQueryVector=initVector();
@@ -166,7 +255,7 @@ public class bingRun {
 				d.calculateDocumentVector();
 				ArrayList<Term> dv=d.documentVector;
 				
-				System.out.println("dv.size:"+dv.size());
+				//System.out.println("dv.size:"+dv.size());
 				for(int i=0; i<dv.size(); i++){
 					Term t=dv.get(i);
 					DocumentVectorSum.get(i).weight+=t.weight;
@@ -189,7 +278,7 @@ public class bingRun {
 			Term t=new Term(terms.get(i), 0.0);
 			documentVectorSumInit.add(t);
 		}
-		System.out.println("documentVecotrSumInit size:"+documentVectorSumInit.size()+"all term size:"+terms.size());
+		//System.out.println("documentVecotrSumInit size:"+documentVectorSumInit.size()+"all term size:"+terms.size());
 		return documentVectorSumInit;
 	}
 	

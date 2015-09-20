@@ -79,9 +79,9 @@ public class Document {
 			String str=titlearr[i];
 			//System.out.println(str);
 			
-			// put the term into allTerms set
+			// put the term into allTerms set, ignore the stop words
 			
-			if(!AllTerms.allTerms.contains(str)){
+			if(!AllTerms.allTerms.contains(str) && !constant.stopWords.contains(str)){
 				AllTerms.allTerms.add(str);
 			}
 			
@@ -102,7 +102,7 @@ public class Document {
 			// calculate term frequency
 			
 			// put the term into allTerms set
-			if(!AllTerms.allTerms.contains(str)){
+			if(!AllTerms.allTerms.contains(str) && !constant.stopWords.contains(str)){
 				AllTerms.allTerms.add(str);
 			}
 			

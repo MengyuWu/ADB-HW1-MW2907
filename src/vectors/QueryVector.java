@@ -7,7 +7,6 @@ import entity.Term;
 
 public class QueryVector {
   public static ArrayList<String> termArr=new ArrayList<String>();
-  public ArrayList<Double> termWeights;
   public static ArrayList<Term> queryVector=new ArrayList<Term>();
   
   
