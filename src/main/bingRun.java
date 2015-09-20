@@ -16,11 +16,13 @@ import entity.Term;
 import helper.bingHelper;
 import constant.constant;
 public class bingRun {
+	
+	public static List<Document> results;
 
 	public static void main(String[] args) {
 		
 		while(true){
-			List<Document> results;
+			
 			try {
 				results = bingHelper.bingSearch();
 				 for(int i=0; i<results.size(); i++){
@@ -69,25 +71,37 @@ public class bingRun {
 				 System.out.println("number of terms:"+AllTerms.allTerms.size() );
 				 
 				 
-				 ArrayList<Term> documentFrequency=AllTerms.getDocumentFrequency(results);
-				 
-				 for(int i=0; i<documentFrequency.size(); i++){
-					 System.out.println("----------------------------------");
-					 Term qt=QueryVector.queryVector.get(i);
-					 Term dt=documentFrequency.get(i);
-					 System.out.println("queryvectors:"+ "Term: "+ qt.term
-							             +" weight: "+qt.weight);
-					 System.out.println("documetnFrequency:"+"Term: "+ dt.term
-				             +" weight: "+dt.weight);
-				 }
+				 getDocumentFrequencies();
 				 
 				 
-				 
-				 
-				 
-				 
-				 
-				 
+//				 for(int i=0; i<Document.documentFrequency.size(); i++){
+//					 System.out.println("----------------------------------");
+//					 Term qt=QueryVector.queryVector.get(i);
+//					 Term dt=Document.documentFrequency.get(i);
+//					 System.out.println("queryvectors:"+ "Term: "+ qt.term
+//							             +" weight: "+qt.weight);
+//					 System.out.println("documetnFrequency:"+"Term: "+ dt.term
+//				             +" weight: "+dt.weight);
+//				 }
+//				 
+//				for(Document d:results){
+//					System.out.println("------document vector-------");
+//					System.out.println(d.getTitle()+" relevant? "+d.relevant);
+//					d.calculateDocumentVector();
+//					for(Term t: d.documentVector){
+//						System.out.println("term: "+t.term+" weight: "+t.weight);
+//					}
+//				}
+//				 
+				
+				ArrayList<Term> nextQueryVector=getNextQueryVector();
+				System.out.println("--------------next query vector----------------");
+				for(Term t:nextQueryVector){
+					System.out.println("term: "+t.term+" weight: "+t.weight);
+				}
+				
+				
+				
 				 // tmp break
 				 break;
 				 
@@ -103,6 +117,85 @@ public class bingRun {
 	}
 	
 	
+	public static ArrayList<Term> getNextQueryVector(){
+		ArrayList<Term> nextQueryVector=initVector();
+		ArrayList<Term> currentQueryVector=QueryVector.queryVector;
+		
+		ArrayList<Document> documents=(ArrayList<Document>) results;
+		
+		double relevant=getCurrentPrecision(results)*constant.TOP_NUMBER_OF_RESULT;
+		double nonRelevant=constant.TOP_NUMBER_OF_RESULT-relevant;
+		
+		ArrayList<Term> relevantDocumentVectorSum=calculateSumOfDocumentVector(documents, true);
+		ArrayList<Term> nonRelevantDocumentVectorSum=calculateSumOfDocumentVector(documents, false);
+		
+		for(int i=0; i<currentQueryVector.size(); i++){
+			
+			Term t=currentQueryVector.get(i);
+			double qt=t.weight;
+			
+			
+			//THE ROCCHIO ALGORITHM
+			// Qnext=alpha*Qcurrent+beta/relevant*Sum(Dr)-gamma/nonrelevant*sum*(Dnr);
+			
+			double firstTerm=constant.alpha*qt;
+			double secondTerm=constant.beta/relevant*relevantDocumentVectorSum.get(i).weight;
+			double thirdTerm=constant.gamma/nonRelevant*nonRelevantDocumentVectorSum.get(i).weight;
+			
+			double sum=firstTerm+secondTerm-thirdTerm;
+			nextQueryVector.get(i).weight+=sum;
+			
+			
+		}
+		
+		for(Term t:nextQueryVector){
+			if(t.weight<0){
+				t.weight=0.0;
+			}
+		}
+		
+		return nextQueryVector;
+	}
+	
+	
+	public static ArrayList<Term> calculateSumOfDocumentVector(List<Document> documents, boolean relevant){
+		ArrayList<Term> DocumentVectorSum=initVector();
+		
+		for(Document d:documents){
+			if(d.relevant==relevant){
+				d.calculateDocumentVector();
+				ArrayList<Term> dv=d.documentVector;
+				
+				System.out.println("dv.size:"+dv.size());
+				for(int i=0; i<dv.size(); i++){
+					Term t=dv.get(i);
+					DocumentVectorSum.get(i).weight+=t.weight;
+				}
+				
+			}
+		
+		}
+		
+		return DocumentVectorSum;
+	}
+	
+	public static ArrayList<Term> initVector(){
+		ArrayList<Term> documentVectorSumInit=new ArrayList<Term>();
+		ArrayList<String> terms=AllTerms.getAllTermsArray();
+		
+		
+		
+		for(int i=0; i<terms.size(); i++){
+			Term t=new Term(terms.get(i), 0.0);
+			documentVectorSumInit.add(t);
+		}
+		System.out.println("documentVecotrSumInit size:"+documentVectorSumInit.size()+"all term size:"+terms.size());
+		return documentVectorSumInit;
+	}
+	
+	public static void getDocumentFrequencies(){
+		Document.documentFrequency=AllTerms.getDocumentFrequency(results);
+	}
 	
 	public static double getCurrentPrecision(List<Document> documents){
 		int total=0;

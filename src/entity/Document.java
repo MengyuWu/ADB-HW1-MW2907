@@ -9,9 +9,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import vectors.AllTerms;
-
+import constant.constant;
 
 public class Document {
+
 
 	String id;
 	String url;
@@ -22,7 +23,7 @@ public class Document {
 	public boolean relevant;
 	public ArrayList<Term> documentVector=new ArrayList<Term>();
 	
-	
+	public static ArrayList<Term> documentFrequency=new ArrayList<Term>();
 	
 	public Document(JSONObject obj) throws JSONException{
 		url=obj.getString("Url");
@@ -41,11 +42,38 @@ public class Document {
 		
 	}
 	
+	
+	public void calculateDocumentVector(){
+		documentVector.clear();
+		 for(Term  t: documentFrequency){
+			 String term=t.term;
+			 
+			 double w=0.0;
+			 double tf=0.0;
+			 double idft=0.0;
+			 double df=t.weight;
+			 if(termFrequency.containsKey(term)){
+				tf=(double)termFrequency.get(term); 
+			 }
+			 
+			 idft=Math.log10((double)constant.TOP_NUMBER_OF_RESULT/df);
+			 
+			 w=tf*idft;
+			 
+			 Term dterm=new Term(term,w);
+			 documentVector.add(dterm);
+		 }
+	}
+	
+	
 	public void  calculateTermFrequencyAndPutTermInSet(){
 		//This first removes all punctuation characters, folds to lowercase, then splits the input,
-		// method2: replaceAll("[^a-zA-Z0-9 ]", "")  keep only number and letters
+		//TODO: method2: replaceAll("[^a-zA-Z0-9 ]", "")  keep only number and letters
+		//TODO: considering remove all stop words like a, and, the
 		String[] titlearr = title.replaceAll("\\p{P}", " ").toLowerCase().split("\\s+");
 		String[] descriptionarr=description.replaceAll("\\p{P}", " ").toLowerCase().split("\\s+");
+		
+		
 		
 		for(int i=0; i<titlearr.length; i++){
 			String str=titlearr[i];
@@ -86,5 +114,37 @@ public class Document {
 				termFrequency.put(str, 1);
 			}
 		}
+	}
+	
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 }
