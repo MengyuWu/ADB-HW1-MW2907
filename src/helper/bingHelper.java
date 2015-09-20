@@ -21,7 +21,7 @@ public class bingHelper {
 	 
 	//Provide your account key here. 
 	static String accountKey = constant.ACCOUNT_KEY;
-	public static String queryTermsStr="gates";
+	public static String queryTermsStr="";
 	
   public static List<Document>  bingSearch() throws EncoderException{
 	List<Document> documents;

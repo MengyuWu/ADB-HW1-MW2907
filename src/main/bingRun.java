@@ -19,9 +19,9 @@ import helper.bingHelper;
 import constant.constant;
 public class bingRun {
 	
-	public static List<Document> results;
+   public static List<Document> results;
    public static Set<String> queryTerms;
-	public static Comparator<Term> termcompartor=new Comparator<Term>(){
+   public static Comparator<Term> termcompartor=new Comparator<Term>(){
 		@Override
 		public int compare(Term a, Term b){
 			if(a.weight>b.weight){
@@ -36,10 +36,17 @@ public class bingRun {
 	
 	
 	public static void main(String[] args) {
-		
+		bingHelper.queryTermsStr="swift";
 		while(true){
 			try {
+				
 				results = bingHelper.bingSearch();
+				System.out.println("return document number:"+results.size());
+				
+				if(results.size()<10){
+					System.out.println("There are fewer than 10 results, Stop!");
+				}
+				
 				 for(int i=0; i<results.size(); i++){
 					 
 			           System.out.printf("---------- Document %d-----------",i+1);
@@ -81,7 +88,12 @@ public class bingRun {
 				 
 				 //test: query vector:
 				 queryTerms=new HashSet<String>();
-				 queryTerms.add("gates");
+				 String[] queryArr=bingHelper.queryTermsStr.split(" ");
+				 for(int m=0; m<queryArr.length;m++){
+					// System.out.println("querryARR[M]:"+queryArr[m]);
+					 queryTerms.add(queryArr[m]); 
+				 }
+				 
 				 QueryVector.queryVectorinitialize(queryTerms);
 				 System.out.println("number of terms:"+AllTerms.allTerms.size() );
 				 
