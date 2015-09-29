@@ -39,6 +39,7 @@ public class bingRun {
 		
 		//Deal with command line argument
 		if(args.length<3){
+			System.out.println("input length:"+args.length);
 			System.out.println("Please follow the format: Bing_account_key precission query");
 			System.exit(1);
 		}
