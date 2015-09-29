@@ -36,7 +36,24 @@ public class bingRun {
 	
 	
 	public static void main(String[] args) {
-		bingHelper.queryTermsStr="swift";
+		
+		//Deal with command line argument
+		if(args.length<3){
+			System.out.println("Please follow the format: Bing_account_key precission query");
+			System.exit(1);
+		}
+		
+		constant.ACCOUNT_KEY=args[0];
+		constant.PRECISION=Double.parseDouble(args[1]);
+		
+		for(int i=2; i<args.length; i++){
+			bingHelper.queryTermsStr+=args[i]+" ";
+		}
+		
+		//TODO: User input validation
+		
+		System.out.println("Your inital query terms: "+bingHelper.queryTermsStr+" Precision:"+constant.PRECISION);
+		
 		while(true){
 			try {
 				
