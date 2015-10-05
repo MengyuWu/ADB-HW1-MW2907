@@ -1,5 +1,7 @@
 package main;
 
+import java.io.Console;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -37,7 +39,7 @@ public class bingRun {
 	
 	
 	public static void main(String[] args) throws JSONException {
-		
+	
 		//Deal with command line argument
 		if(args.length<3){
 			System.out.println("input length:"+args.length);
@@ -80,6 +82,7 @@ public class bingRun {
 	               System.out.println("Is this document relevant? Please type (Y/N)");
 			       String s=in.nextLine();
 			       s=s.toLowerCase();
+			       System.out.println("user input end");
 			       
 			       while(!s.equals("y") && ! s.equals("n")){
 			    	   System.out.println("Please type (Y/N)");
