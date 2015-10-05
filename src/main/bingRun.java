@@ -140,6 +140,7 @@ public class bingRun {
 				
 				//At the end of each iteration, should clear previous dataset
 				cleanHistory();
+				iteration++;
 			} catch (EncoderException e) {
 				e.printStackTrace();
 			}
