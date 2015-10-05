@@ -23,18 +23,16 @@ public class AllTerms {
 	  
 	  for(String t:terms){
 		  double count=0;
+		  // Count how many docs contain the term
 		  for(Document d:documents){
-			  
 			  if(d.termFrequency.containsKey(t)){
 				  count++;
 			  }
-			  
 		  }
-		  
+		  // Add the term and its count to documentFrequency
 		  Term term=new Term(t,count);
 		  documentFrequency.add(term);  
 	  }
-	  
 	  return documentFrequency;
   }
   

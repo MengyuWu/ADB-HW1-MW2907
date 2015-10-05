@@ -6,8 +6,8 @@
               as the first entry and export the buildfile again. --><project basedir="." default="build" name="ADB-mw2907-hw1">
     <property environment="env"/>
     <property name="debuglevel" value="source,lines,vars"/>
-    <property name="target" value="1.7"/>
-    <property name="source" value="1.7"/>
+    <property name="target" value="1.6"/>
+    <property name="source" value="1.6"/>
     <path id="ADB-mw2907-hw1.classpath">
         <pathelement location="bin"/>
         <pathelement location="lib/json-20140107.jar"/>
@@ -37,7 +37,7 @@
     </target>
     <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
     <target name="bingRun">
-        <java classname="main.bingRun" failonerror="true" fork="yes">
+        <java classname="main.bingRun" failonerror="true" fork="no">
             <arg line="${args}"/>
             <classpath refid="ADB-mw2907-hw1.classpath"/>
         </java>

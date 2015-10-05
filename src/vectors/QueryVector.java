@@ -15,15 +15,15 @@ public class QueryVector {
   }
   
   public static void queryVectorinitialize(Set<String> queryTerms){
-	 
-	  getTerms();
+	  getTerms(); // Get all the terms
 	  
+	  // Check if the query contains the term and initialize accordingly
 	  for(int i=0; i<termArr.size(); i++){
 		   String term=termArr.get(i);
 		   if(queryTerms.contains(term)){
 			  Term t=new Term(term,1.0);
-			   queryVector.add(t);
-		   }else{
+			  queryVector.add(t);
+		   } else{
 			   Term t=new Term(term,0.0);
 			   queryVector.add(t);
 		   }

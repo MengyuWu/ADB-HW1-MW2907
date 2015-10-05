@@ -12,46 +12,44 @@ import vectors.AllTerms;
 import constant.constant;
 
 public class Document {
-
-
 	String id;
 	String url;
 	String title;
 	String description;
 	String displayUrl;
+	// How many times terms appear in the doc
 	public HashMap<String,Integer> termFrequency=new HashMap<String,Integer>();
 	public boolean relevant;
 	public ArrayList<Term> documentVector=new ArrayList<Term>();
 	
 	public static ArrayList<Term> documentFrequency=new ArrayList<Term>();
 	
+	// Create the Document, extracting its essential attributes
 	public Document(JSONObject obj) throws JSONException{
-		url=obj.getString("Url");
-		displayUrl=obj.getString("DisplayUrl");
-		description=obj.getString("Description");
-		title=obj.getString("Title");
-		id=obj.getString("ID");
-		
-		
+		url = obj.getString("Url");
+		displayUrl = obj.getString("DisplayUrl");
+		description = obj.getString("Description");
+		title = obj.getString("Title");
+		id = obj.getString("ID");
 	}
 	
+	// Attributes to show to the user
 	public void showDocumentContent(){
 		System.out.println("url: "+displayUrl);
 		System.out.println("Title: "+title);
 		System.out.println("Description: "+description);
-		
 	}
 	
-	
+	// calculate the tf–idf for each term, reflecting the importance of a word to a document
 	public void calculateDocumentVector(){
 		documentVector.clear();
-		 for(Term  t: documentFrequency){
+		 for(Term t: documentFrequency){
 			 String term=t.term;
 			 
 			 double w=0.0;
-			 double tf=0.0;
-			 double idft=0.0;
-			 double df=t.weight;
+			 double tf=0.0; // term frequency
+			 double idft=0.0; // inverse doc frequency
+			 double df=t.weight; // document frequency
 			 if(termFrequency.containsKey(term)){
 				tf=(double)termFrequency.get(term); 
 			 }
@@ -65,43 +63,34 @@ public class Document {
 		 }
 	}
 	
-	
 	public void  calculateTermFrequencyAndPutTermInSet(){
-		//This first removes all punctuation characters, folds to lowercase, then splits the input,
-		//TODO: method2: replaceAll("[^a-zA-Z0-9 ]", "")  keep only number and letters
-		//TODO: considering remove all stop words like a, and, the
+		// Removes all punctuation characters, converts to lowercase, then splits the input
 		String[] titlearr = title.replaceAll("\\p{P}", " ").toLowerCase().split("\\s+");
 		String[] descriptionarr=description.replaceAll("\\p{P}", " ").toLowerCase().split("\\s+");
 		
-		
-		
-		for(int i=0; i<titlearr.length; i++){
-			String str=titlearr[i];
-			//System.out.println(str);
+		// Go through each term in the title, calculating the term frequency and putting terms into set
+		for(int i = 0; i < titlearr.length; i++){
+			String str = titlearr[i];
 			
-			// put the term into allTerms set, ignore the stop words
-			
+			// Put the term into allTerms set, ignore the stop words
 			if(!AllTerms.allTerms.contains(str) && !constant.stopWords.contains(str)){
 				AllTerms.allTerms.add(str);
 			}
 			
-			// calculate term frequency
+			// Calculate term frequency
 			if(termFrequency.containsKey(str)){
-				int val=termFrequency.get(str);
+				int val = termFrequency.get(str);
 				val++;
 				termFrequency.put(str, val);
-			}else{
+			} else{
 				termFrequency.put(str, 1);
 			}
 		}
 		
-		
-		for(int i=0; i<descriptionarr.length; i++){
-			String str=descriptionarr[i];
-			//System.out.println(str);
-			// calculate term frequency
-			
-			// put the term into allTerms set
+		// Do the same for the terms in the document's description
+		for(int i = 0; i < descriptionarr.length; i++){
+			String str = descriptionarr[i];
+
 			if(!AllTerms.allTerms.contains(str) && !constant.stopWords.contains(str)){
 				AllTerms.allTerms.add(str);
 			}
@@ -110,7 +99,7 @@ public class Document {
 				int val=termFrequency.get(str);
 				val++;
 				termFrequency.put(str, val);
-			}else{
+			} else{
 				termFrequency.put(str, 1);
 			}
 		}
