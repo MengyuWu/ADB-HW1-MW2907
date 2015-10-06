@@ -65,13 +65,14 @@ public class Document {
 	
 	public void  calculateTermFrequencyAndPutTermInSet(){
 		// Removes all punctuation characters, converts to lowercase, then splits the input
-		String[] titlearr = title.replaceAll("\\p{P}", " ").toLowerCase().split("\\s+");
-		String[] descriptionarr=description.replaceAll("\\p{P}", " ").toLowerCase().split("\\s+");
+		String[] titlearr = title.replaceAll("\\p{P}", "").toLowerCase().split("\\s+");
+		String[] descriptionarr=description.replaceAll("\\p{P}", "").toLowerCase().split("\\s+");
 		
 		// Go through each term in the title, calculating the term frequency and putting terms into set
 		for(int i = 0; i < titlearr.length; i++){
 			String str = titlearr[i];
-			
+			if (str.length() < 2) continue;
+			//System.out.println("Title term: " + str);			
 			// Put the term into allTerms set, ignore the stop words
 			if(!AllTerms.allTerms.contains(str) && !constant.stopWords.contains(str)){
 				AllTerms.allTerms.add(str);
@@ -90,7 +91,8 @@ public class Document {
 		// Do the same for the terms in the document's description
 		for(int i = 0; i < descriptionarr.length; i++){
 			String str = descriptionarr[i];
-
+			if (str.length() < 2) continue;
+			//System.out.println("Description term: " + str);
 			if(!AllTerms.allTerms.contains(str) && !constant.stopWords.contains(str)){
 				AllTerms.allTerms.add(str);
 			}

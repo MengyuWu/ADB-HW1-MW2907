@@ -58,7 +58,7 @@ public class bingRun {
 		
 		// Add all the query terms
 		for(int i=2; i<args.length; i++){
-			bingHelper.queryTermsStr+=args[i]+" ";
+			bingHelper.queryTermsStr+=args[i].replaceAll("\\p{P}", "")+" ";
 		}
 		originalQueryTerms = bingHelper.queryTermsStr.split(" ");
 		
@@ -118,16 +118,26 @@ public class bingRun {
 				 String[] queryArr=bingHelper.queryTermsStr.split(" ");
 				 for(int m=0; m<queryArr.length;m++){
 					 queryTerms.add(queryArr[m]); 
+					 System.out.println("Query term: " + queryArr[m]);
 				 }
-				 
+
 				 QueryVector.queryVectorinitialize(queryTerms);
 				 System.out.println("number of terms: " + AllTerms.allTerms.size() );
-				 
+				
+				 ArrayList<String> allTerms = AllTerms.getAllTermsArray();
+				 for (int i = 0; i < allTerms.size(); i++) {
+					System.out.println("All terms: " + allTerms.get(i));
+				}
+
 				 // Calculate the document frequency for each term
 				 getDocumentFrequencies();	 
 				
 				ArrayList<Term> nextQueryVector=getNextQueryVector(); // Obtained via Rocchio's Algorithm
-				
+				for (int i = 0; i < nextQueryVector.size(); i++) {
+					Term t = nextQueryVector.get(i);
+					System.out.println("Term: " + t.term + " Weight: " + t.weight); // terms like x-men are wiped
+				}
+
 				List<Term> newWords=createNewQueryTerms(nextQueryVector,queryTerms);
 				List<Term> curretWords=getCurretQueryTerms(nextQueryVector,queryTerms);
 				

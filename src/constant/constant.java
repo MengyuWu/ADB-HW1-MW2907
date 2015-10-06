@@ -16,5 +16,5 @@ public class constant {
 	
 	// Set of stopwords
 	public static Set<String> stopWords=new HashSet<String>(Arrays.asList("a","an","the","at","from","of"));
-	//public static Set<String> stopWords=new HashSet<String>(Arrays.asList("a","an","the","at","of", "and", "or", "but", "then", "off", "on", "like"));
+	//public static Set<String> stopWords=new HashSet<String>(Arrays.asList("a","an","the","at","of", "from", "and", "or", "but", "then", "off", "on", "like"));
 }
