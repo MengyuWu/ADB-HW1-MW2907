@@ -20,6 +20,7 @@ import constant.constant;
 public class bingRun {
    public static List<Document> results;
    public static Set<String> queryTerms;
+   public static String[] originalQueryTerms;
    public static Comparator<Term> termcompartor=new Comparator<Term>(){
 		@Override
 		public int compare(Term a, Term b){ // Compare terms by weight
@@ -59,6 +60,7 @@ public class bingRun {
 		for(int i=2; i<args.length; i++){
 			bingHelper.queryTermsStr+=args[i]+" ";
 		}
+		originalQueryTerms = bingHelper.queryTermsStr.split(" ");
 		
 		System.out.println("Your initial query terms: "+bingHelper.queryTermsStr+" Precision: "+constant.PRECISION);
 		int iteration = 1;
@@ -135,6 +137,23 @@ public class bingRun {
 				nextQueryTerms.addAll(newWords);
 				
 				sortQueryTerms(nextQueryTerms);
+
+				// Ensure the original query terms are in the front and in the correct order
+				for (int i = originalQueryTerms.length-1; i >= 0; i--) {
+					int idx = 0;
+					Term term = nextQueryTerms.get(0); // init to non-null value
+					for (int j = 0; j < nextQueryTerms.size(); j++) {
+						Term t = nextQueryTerms.get(j);
+						if (t.term.equals(originalQueryTerms[i])) {
+							idx = j;
+							term = t;
+							break;
+						}
+					}
+					nextQueryTerms.remove(idx);
+					nextQueryTerms.add(0, term); // re-add the term back to the front
+				}
+
 				bingHelper.queryTermsStr=createQueryString(nextQueryTerms);
 				System.out.println("next query terms: " + bingHelper.queryTermsStr);
 				
