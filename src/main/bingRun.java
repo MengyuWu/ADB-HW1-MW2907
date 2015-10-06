@@ -187,7 +187,7 @@ public class bingRun {
 			if(max==0){
 				break;
 			}
-			// TODO: are we adding the two lowest term weights, and what does this mean?
+			// add the term with the lowest term weight (that isn't in queryTerms yet)
 			if(!queryTerms.contains(t.term)){
 				System.out.println("new word:"+t.term+" weight:"+t.weight);
 				newWords.add(t);
@@ -210,7 +210,7 @@ public class bingRun {
 		return currentQueryTerms;
 	}
 	
-	// Sorts query terms in ascending order
+	// Sorts query terms in descending order of term weight
 	public static void sortQueryTerms(List<Term> queryTerms){
 		Collections.sort(queryTerms, termcompartor);
 	}
