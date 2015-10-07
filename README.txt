@@ -19,16 +19,17 @@ To run:
 	2) ant
 
 	If you receive something similar to the following error:
-		[javac] javac: invalid target release: 1.7 
+		[javac] javac: invalid target release: 1.7
 		Please do the following:
-			1) Get current version of Java using this command: java -version	
-			2) In Build.xml, update the following two lines to reflect the
+			1) In Build.xml, update the following two lines to reflect the
 			version of Java that you are using:
 		 		<property name="target" value="1.6"/>
-    	 		<property name="source" value="1.6"/>
+    	 			<property name="source" value="1.6"/>
+    	 		2) In Build.xml, if fork="yes" in the line below, change fork="no"
+    	 			<java classname="main.bingRun" failonerror="true" fork="no">
 
 	3) ant bingRun -Dargs='<Bing Account Key> <Precision> <Query>'
-	ex. ant bingRun -Dargs='pb71DGWbKoLI5Vki6bTSeAIM4otYkmdXMqSV+s/WvP0 0.9 gates'
+	ex. ant bingRun -Dargs='pb71DGWbKoLI5Vki6bTSeAIM4otYkmdXMqSV+s/WvP0 0.9 taj mahal'
 
 d). Internal Design:
 
@@ -46,7 +47,4 @@ Then we calculated the query vector for the next iteration.
 Sort all the terms in descedning order according to the new calculated weights.
 Pick two new words that do not belong to the previous query terms.
 
-
 f). Bing Search Account Key: pb71DGWbKoLI5Vki6bTSeAIM4otYkmdXMqSV+s/WvP0
-
-g). Additional Info: 
