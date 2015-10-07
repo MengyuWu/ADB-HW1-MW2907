@@ -36,7 +36,10 @@ d). Internal Design:
 e). Query-modification Method:
 The main algorithm is based on Rocchio Algorithm:
 1. first build the vector. 
-We did stop words elimination to ignore words: ("a","an","the","at","from","of").
+We did stop words elimination to ignore words. The full list can be seen in constant.java,
+here is the first line:
+	"a","an", "able","about","across","after","all","almost",
+
 The words set is all the words from titles and descriptions of snippets that Bing returns.
 Then build the query vectors, and document vectors.
 In the query vectors, if that term appears in the query set the weight to be 1, otherwise 0
