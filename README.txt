@@ -19,23 +19,27 @@ To run:
 	2) ant
 
 	If you receive something similar to the following error:
-		[javac] javac: invalid target release: 1.7 
+		[javac] javac: invalid target release: 1.7
 		Please do the following:
-			1) Get current version of Java using this command: java -version	
-			2) In Build.xml, update the following two lines to reflect the
+			1) In Build.xml, update the following two lines to reflect the
 			version of Java that you are using:
 		 		<property name="target" value="1.6"/>
-    	 		<property name="source" value="1.6"/>
+    	 			<property name="source" value="1.6"/>
+    	 		2) In Build.xml, if fork="yes" in the line below, change fork="no"
+    	 			<java classname="main.bingRun" failonerror="true" fork="no">
 
 	3) ant bingRun -Dargs='<Bing Account Key> <Precision> <Query>'
-	ex. ant bingRun -Dargs='pb71DGWbKoLI5Vki6bTSeAIM4otYkmdXMqSV+s/WvP0 0.9 gates'
+	ex. ant bingRun -Dargs='pb71DGWbKoLI5Vki6bTSeAIM4otYkmdXMqSV+s/WvP0 0.9 taj mahal'
 
 d). Internal Design:
 
 e). Query-modification Method:
 The main algorithm is based on Rocchio Algorithm:
 1. first build the vector. 
-We did stop words elimination to ignore words: ("a","an","the","at","from","of").
+We did stop words elimination to ignore words. The full list can be seen in constant.java,
+here is the first line:
+	"a","an", "able","about","across","after","all","almost",
+
 The words set is all the words from titles and descriptions of snippets that Bing returns.
 Then build the query vectors, and document vectors.
 In the query vectors, if that term appears in the query set the weight to be 1, otherwise 0
@@ -46,7 +50,4 @@ Then we calculated the query vector for the next iteration.
 Sort all the terms in descedning order according to the new calculated weights.
 Pick two new words that do not belong to the previous query terms.
 
-
 f). Bing Search Account Key: pb71DGWbKoLI5Vki6bTSeAIM4otYkmdXMqSV+s/WvP0
-
-g). Additional Info: 
