@@ -129,7 +129,7 @@ public class bingRun {
 				 // Calculate the document frequency for each term
 				 getDocumentFrequencies();	 
 				
-				ArrayList<Term> nextQueryVector=getNextQueryVector(); // Obtained via Rocchio's Algorithm
+				ArrayList<Term> nextQueryVector=getNextQueryVector(); // Obtained via Rocchio Algorithm
 
 				List<Term> newWords=createNewQueryTerms(nextQueryVector,queryTerms);
 				List<Term> curretWords=getCurretQueryTerms(nextQueryVector,queryTerms);
