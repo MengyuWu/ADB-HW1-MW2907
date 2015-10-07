@@ -46,13 +46,12 @@ Document.java: Each document returned from the server is an instance of this cla
 showing document contents to the user (name, url, description), calculating term frequency and adding any new words
 into the set of all terms, and calculating the tf-idf for each term in the document.
 
-Term.java: Each term has a term (name) and weight.
+Term.java: Each term has a term (name) and weight, which is later used to determine which words to add to the query.
 
 AllTerms.java: Contains methods for calculating document frequency (the number of docs that have Term t), and keeps 
-a set of all unique terms encountered...
+a set of all unique terms encountered during this iteration.
 
-QueryVector.java:
-
+QueryVector.java: Query vector object storing the weights of each term found in the current iteration.
 
 e). Query-modification Method:
 The main algorithm is based on Rocchio Algorithm:
