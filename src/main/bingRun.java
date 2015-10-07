@@ -58,7 +58,7 @@ public class bingRun {
 		
 		// Add all the query terms
 		for(int i=2; i<args.length; i++){
-			bingHelper.queryTermsStr+=args[i].replaceAll("\\p{P}", "")+" ";
+			bingHelper.queryTermsStr+=args[i].replaceAll("\\p{P}", " ") + " ";
 		}
 		originalQueryTerms = bingHelper.queryTermsStr.split(" ");
 		
@@ -107,8 +107,8 @@ public class bingRun {
 				 System.out.println("current iteration using terms: " + bingHelper.queryTermsStr);
 				 System.out.println("current precision: " + currentPrecision);
 				 
-				 // Desired precision reached, or no relevant results in first iteration
-				 if(currentPrecision >= constant.PRECISION || (iteration == 1 && currentPrecision == 0)) {
+				 // Desired precision reached, or no relevant results
+				 if(currentPrecision >= constant.PRECISION || (currentPrecision == 0)) {
 					 System.out.println("---------------- Stop ---------------");
 					 break;
 				 }
@@ -125,18 +125,11 @@ public class bingRun {
 				 System.out.println("number of terms: " + AllTerms.allTerms.size() );
 				
 				 ArrayList<String> allTerms = AllTerms.getAllTermsArray();
-				 for (int i = 0; i < allTerms.size(); i++) {
-					System.out.println("All terms: " + allTerms.get(i));
-				}
 
 				 // Calculate the document frequency for each term
 				 getDocumentFrequencies();	 
 				
 				ArrayList<Term> nextQueryVector=getNextQueryVector(); // Obtained via Rocchio's Algorithm
-				for (int i = 0; i < nextQueryVector.size(); i++) {
-					Term t = nextQueryVector.get(i);
-					System.out.println("Term: " + t.term + " Weight: " + t.weight); // terms like x-men are wiped
-				}
 
 				List<Term> newWords=createNewQueryTerms(nextQueryVector,queryTerms);
 				List<Term> curretWords=getCurretQueryTerms(nextQueryVector,queryTerms);
@@ -199,7 +192,6 @@ public class bingRun {
 			}
 			// add the term with the lowest term weight (that isn't in queryTerms yet)
 			if(!queryTerms.contains(t.term)){
-				System.out.println("new word:"+t.term+" weight:"+t.weight);
 				newWords.add(t);
 				max--;
 			}
