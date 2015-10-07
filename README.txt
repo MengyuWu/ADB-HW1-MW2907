@@ -32,26 +32,25 @@ To run:
 	ex. ant bingRun -Dargs='pb71DGWbKoLI5Vki6bTSeAIM4otYkmdXMqSV+s/WvP0 0.9 taj mahal'
 
 d). Internal Design:
-constant.java:
-	This class contains constants such as the Bing Account Key, the alpha/beta/gamma values for the 
-	Rocchio Algorithm, and the stop words to be filtered out.
-bingRun.java:
-	The main class. Its most prominent functions include taking and validating the user's arguments, 
-	running the iteration loop, and computing the terms to be added to the query string in the next
-	iteration (if necessary) based on the Rocchio Algorithm.
-bingHelper.java:
-	A helper class that uses the Bing API to retrieve the top ten documents matching the query. It 
-	forms a connection with the server, retrieves data using this connection, and converts the data
-	into Document objects.
-Document.java:
-	Each document returned from the server is an instance of this class. This class contains methods
-	for showing document contents to the user (name, url, description), calculating term frequency and
-	adding any new words into the set of all terms, and calculating the tf-idf for each term in the document.
-Term.java:
-	Each term has a term (name) and weight.
-AllTerms.java:
-	Contains methods for calculating document frequency (the number of docs that have Term t), and keeps 
-	a set of all unique terms encountered...
+constant.java:This class contains constants such as the Bing Account Key, the alpha/beta/gamma values for the 
+Rocchio Algorithm, and the stop words to be filtered out.
+
+bingRun.java: The main class. Its most prominent functions include taking and validating the user's arguments, 
+running the iteration loop, and computing the terms to be added to the query string in the next iteration
+(if necessary) based on the Rocchio Algorithm.
+
+bingHelper.java: A helper class that uses the Bing API to retrieve the top ten documents matching the query. It 
+forms a connection with the server, retrieves data using this connection, and converts the data into Document objects.
+
+Document.java: Each document returned from the server is an instance of this class. This class contains methods for
+showing document contents to the user (name, url, description), calculating term frequency and adding any new words
+into the set of all terms, and calculating the tf-idf for each term in the document.
+
+Term.java: Each term has a term (name) and weight.
+
+AllTerms.java: Contains methods for calculating document frequency (the number of docs that have Term t), and keeps 
+a set of all unique terms encountered...
+
 QueryVector.java:
 
 
